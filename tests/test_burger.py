@@ -1,4 +1,5 @@
-import pytest
+from unittest.mock import Mock
+
 from practikum.burger import Burger
 from practikum.bun import Bun
 from practikum.ingredient import Ingredient
@@ -54,3 +55,40 @@ class TestBurger:
         expected_price = bun.get_price() * 2 + ingredient1.get_price() + ingredient2.get_price()
 
         assert burger.get_price() == expected_price, f"Ожидаемая цена {expected_price}, а была {burger.get_price()}"
+
+    def test_get_receipt(self):
+        bun_mock = Mock()
+        bun_mock.get_name.return_value = 'Булочка Бриошь'
+
+        ingredient1_mock = Mock()
+        ingredient1_mock.get_type.return_value = 'Мясо'
+        ingredient1_mock.get_name.return_value = 'Говяжья котлета'
+
+        ingredient2_mock = Mock()
+        ingredient2_mock.get_type.return_value = 'Соус'
+        ingredient2_mock.get_name.return_value = 'Шрирача'
+
+        obj = Mock()
+        obj.bun = bun_mock
+        obj.ingredients = [ingredient1_mock, ingredient2_mock]
+        obj.get_price.return_value = 12.50
+
+        obj.get_receipt.return_value = (
+            "(==== Булочка Бриошь ====)\n"
+            "= мясо Говяжья котлета =\n"
+            "= соус Шрирача =\n"
+            "(==== Булочка Бриошь ====)\n"
+            "Price: 12.5"
+        )
+
+        result = obj.get_receipt()
+
+        expected_receipt = (
+            "(==== Булочка Бриошь ====)\n"
+            "= мясо Говяжья котлета =\n"
+            "= соус Шрирача =\n"
+            "(==== Булочка Бриошь ====)\n"
+            "Price: 12.5"
+        )
+
+        assert result == expected_receipt
