@@ -51,4 +51,6 @@ class TestBurger:
         burger.add_ingredient(ingredient1)
         burger.add_ingredient(ingredient2)
 
-        assert burger.get_price() == 1.5 * 2 + 2.0 + 0.5
+        expected_price = bun.get_price() * 2 + ingredient1.get_price() + ingredient2.get_price()
+
+        assert burger.get_price() == expected_price, f"Ожидаемая цена {expected_price}, а была {burger.get_price()}"
